@@ -1,16 +1,21 @@
 package com.stepuro.payment.order.service.impl;
 
+import com.stepuro.payment.order.api.dto.CreatePaymentRequest;
 import com.stepuro.payment.order.api.dto.PaymentOrderEntityDto;
 import com.stepuro.payment.order.api.exceptions.NoContentException;
 import com.stepuro.payment.order.api.exceptions.ResourceNotFoundException;
 import com.stepuro.payment.order.api.mapper.PaymentOrderEntityMapper;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
+import com.stepuro.payment.order.model.enums.PaymentType;
 import com.stepuro.payment.order.repository.PaymentOrderEntityRepositoryJpa;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,6 +23,17 @@ import java.util.UUID;
 public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService {
     @Autowired
     private PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
+
+    @Autowired
+    private WebClient webClient;
+
+    @Override
+    @Transactional
+    public PaymentOrderEntityDto createPayment(CreatePaymentRequest request){
+        return null;
+    }
+
+
 
     @Override
     public List<PaymentOrderEntityDto> findALl() {
@@ -43,6 +59,33 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                 .findById(id)
                                 .orElseThrow(() -> new ResourceNotFoundException("PaymentOrderEntity with id " + id + " not found"))
                 );
+    }
+
+    @Override
+    public boolean checkIfPaymentExists(String paymentNumber, PaymentType paymentType) {
+        Boolean result;
+
+        switch (paymentType) {
+            case PaymentType.CARD:
+                result = webClient.get()
+                        .uri("http://localhost:8080/cards/exists_by_card_number/" + paymentNumber)
+                        .retrieve()
+                        .bodyToMono(Boolean.class)
+                        .block(Duration.of(1000, ChronoUnit.MILLIS));
+                break;
+
+            case PaymentType.ACCOUNT:
+                result = webClient.get()
+                        .uri("http://localhost:8080/accounts/exists_by_account_number/" + paymentNumber)
+                        .retrieve()
+                        .bodyToMono(Boolean.class)
+                        .block(Duration.of(1000, ChronoUnit.MILLIS));
+                break;
+
+            default:
+                return false;
+        }
+        return result;
     }
 
     @Override

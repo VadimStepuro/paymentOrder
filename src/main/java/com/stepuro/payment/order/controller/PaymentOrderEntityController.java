@@ -1,6 +1,7 @@
 package com.stepuro.payment.order.controller;
 
 import com.stepuro.payment.order.api.annotation.Loggable;
+import com.stepuro.payment.order.api.dto.CreatePaymentRequest;
 import com.stepuro.payment.order.api.dto.PaymentOrderEntityDto;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,13 @@ import java.util.UUID;
 public class PaymentOrderEntityController {
     @Autowired
     private PaymentOrderEntityService paymentOrderEntityService;
+
+    @PostMapping
+    public ResponseEntity<PaymentOrderEntityDto> createPayment(CreatePaymentRequest request){
+        PaymentOrderEntityDto payment = paymentOrderEntityService.createPayment(request);
+
+        return new ResponseEntity<>(payment, HttpStatus.CREATED);
+    }
 
     @Operation(summary = "Get all payment order entities")
     @ApiResponses(value = {
