@@ -28,7 +28,8 @@ public class OperationDataValidValidator implements ConstraintValidator<Operatio
 
     @Override
     public boolean isValid(Object o, ConstraintValidatorContext constraintValidatorContext) {
-        PaymentType paymentType = PaymentType.valueOf(Objects
+        PaymentType paymentType = PaymentType
+                .valueOf(Objects
                 .requireNonNull(new BeanWrapperImpl(o).getPropertyValue(paymentTypeName))
                 .toString());
 

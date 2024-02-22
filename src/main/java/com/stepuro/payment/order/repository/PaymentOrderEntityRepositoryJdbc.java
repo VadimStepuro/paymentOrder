@@ -114,8 +114,8 @@ public class PaymentOrderEntityRepositoryJdbc {
             paymentOrderEntity.setDestinationCardNumber(rs.getString("destination_card_number"));
             paymentOrderEntity.setSourceAccountNumber(rs.getString("source_account_number"));
             paymentOrderEntity.setDestinationAccountNumber(rs.getString("destination_account_number"));
-            paymentOrderEntity.setCreatedDate(rs.getTimestamp(3));
-            paymentOrderEntity.setUpdatedDate(rs.getTimestamp(4));
+            paymentOrderEntity.setCreatedDate(rs.getTimestamp("created_date"));
+            paymentOrderEntity.setUpdatedDate(rs.getTimestamp("updated_date"));
             paymentOrderEntity.setStatus(PaymentOrderEntityStatus.valueOf(rs.getString("status")));
             paymentOrderEntity.setPaymentType(PaymentType.valueOf(rs.getString("payment_type")));
             paymentOrderEntity.setAmount(rs.getBigDecimal("amount"));
