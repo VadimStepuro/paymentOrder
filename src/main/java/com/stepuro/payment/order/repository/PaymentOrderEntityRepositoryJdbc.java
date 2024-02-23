@@ -1,5 +1,6 @@
 package com.stepuro.payment.order.repository;
 
+import com.stepuro.payment.order.api.exceptions.ResourceNotFoundException;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
 import com.stepuro.payment.order.model.enums.PaymentOrderEntityStatus;
 import com.stepuro.payment.order.model.enums.PaymentType;
@@ -95,7 +96,7 @@ public class PaymentOrderEntityRepositoryJdbc {
                     id);
         }
         catch (EmptyResultDataAccessException exception){
-            return null;
+            throw new ResourceNotFoundException("PaymentOrderEntity with id " + id + " not found");
         }
     }
 

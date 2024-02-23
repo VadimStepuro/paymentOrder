@@ -39,10 +39,7 @@ public class PaymentOrderEntityRepositoryJpaTests {
 
     @Test
     public void PaymentOrderEntityRepositoryJpa_FindAll_ReturnsModels(){
-        paymentOrderEntityRepositoryJpa.save(paymentOrderEntity1);
-        paymentOrderEntityRepositoryJpa.save(paymentOrderEntity2);
-        paymentOrderEntityRepositoryJpa.save(paymentOrderEntity3);
-        paymentOrderEntityRepositoryJpa.save(paymentOrderEntity4);
+        paymentOrderEntityRepositoryJpa.saveAll(paymentOrderEntityList);
 
         List<PaymentOrderEntity> paymentOrderEntities = paymentOrderEntityRepositoryJpa.findAll();
 

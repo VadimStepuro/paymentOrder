@@ -1,5 +1,6 @@
 package com.stepuro.payment.order.repository;
 
+import com.stepuro.payment.order.api.exceptions.ResourceNotFoundException;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
 import com.stepuro.payment.order.model.enums.PaymentOrderEntityStatus;
 import com.stepuro.payment.order.model.enums.PaymentType;
@@ -105,8 +106,6 @@ public class PaymentOrderEntityRepositoryJdbcTests {
 
         paymentOrderEntityRepositoryJdbc.deleteById(id);
 
-        PaymentOrderEntity foundEntity = paymentOrderEntityRepositoryJdbc.findById(id);
-
-        assertNull(foundEntity);
+        assertThrows(ResourceNotFoundException.class, () -> paymentOrderEntityRepositoryJdbc.findById(id));
     }
 }

@@ -53,14 +53,7 @@ public class PaymentOrderEntityServiceImplTests {
 
     @Test
     public void PaymentOrderEntityServiceImpl_FindAll_ReturnsAllModels(){
-        List<PaymentOrderEntity> entities = List.of(
-                paymentOrderEntity1,
-                paymentOrderEntity2,
-                paymentOrderEntity3,
-                paymentOrderEntity4
-        );
-
-        when(paymentOrderEntityRepositoryJpa.findAll()).thenReturn(entities);
+        when(paymentOrderEntityRepositoryJpa.findAll()).thenReturn(paymentOrderEntityList);
 
         List<PaymentOrderEntityDto> entityDtos = paymentOrderEntityService.findALl();
 

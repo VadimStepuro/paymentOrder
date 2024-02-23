@@ -9,6 +9,7 @@ import com.stepuro.payment.order.model.enums.PaymentType;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public class PaymentOrderEntitySample {
@@ -55,6 +56,13 @@ public class PaymentOrderEntitySample {
             .paymentType(PaymentType.CARD)
             .amount(new BigDecimal("300.05"))
             .build();
+
+    public static List<PaymentOrderEntity> paymentOrderEntityList = List.of(
+            paymentOrderEntity1,
+            paymentOrderEntity2,
+            paymentOrderEntity3,
+            paymentOrderEntity4
+    );
 
     public static PaymentOrderEntityDto paymentOrderEntityDto = PaymentOrderEntityMapper
             .INSTANCE
