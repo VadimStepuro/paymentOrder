@@ -1,7 +1,6 @@
 package com.stepuro.payment.order.controller;
 
 import com.stepuro.payment.order.api.annotation.Loggable;
-import com.stepuro.payment.order.api.dto.CreatePaymentRequest;
 import com.stepuro.payment.order.api.dto.PaymentOrderEntityDto;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -58,6 +57,8 @@ public class PaymentOrderEntityController {
         return new ResponseEntity<>(foundPaymentOrderEntity, HttpStatus.OK);
     }
 
+
+
     @Operation(summary = "Create payment order entity")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Created payment order entity",
@@ -79,10 +80,26 @@ public class PaymentOrderEntityController {
                     content = { @Content(mediaType = "application/json",
                             schema = @Schema(implementation = PaymentOrderEntityDto.class))}),
             @ApiResponse(responseCode = "400", description = "Invalid create payment request",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = HashMap.class))) })
-    @PostMapping(value = "payment_order_entities/create_payment", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<PaymentOrderEntityDto> createPayment(@RequestBody @Valid CreatePaymentRequest request){
-        PaymentOrderEntityDto payment = paymentOrderEntityService.createPayment(request);
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
+    @Loggable
+    @PostMapping(value = "payment_order_entities/transfer_amount", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<PaymentOrderEntityDto> transferAmount(@RequestBody @Valid PaymentOrderEntityDto paymentOrderEntityDto){
+        PaymentOrderEntityDto payment = paymentOrderEntityService.createPayment(paymentOrderEntityDto);
+
+        return new ResponseEntity<>(payment, HttpStatus.CREATED);
+    }
+
+    @Operation(summary = "Create payment order entity with create payment request")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Created payment order entity",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PaymentOrderEntityDto.class))}),
+            @ApiResponse(responseCode = "400", description = "Invalid create payment request",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
+    @Loggable
+    @PostMapping(value = "payment_order_entities/transfer_amount_rest_template", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<PaymentOrderEntityDto> transferAmountRestTemplate(@RequestBody @Valid PaymentOrderEntityDto paymentOrderEntityDto){
+        PaymentOrderEntityDto payment = paymentOrderEntityService.createRestTemplatePayment(paymentOrderEntityDto);
 
         return new ResponseEntity<>(payment, HttpStatus.CREATED);
     }

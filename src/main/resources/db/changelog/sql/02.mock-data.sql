@@ -1,0 +1,3 @@
+INSERT INTO payment_order_entity (source_card_number, destination_card_number, source_account_number, destination_account_number, created_date, updated_date, status, payment_type, amount, user_id)
+                        VALUES ('2222405343248877', '2222420000001113', 'IE12BOFI90000112345678', 'IE12BOFI90000112345555', '2024-02-23 12:16:45.866', '2024-02-23 12:16:45.866', 'APPROVED', 'CARD', 230.0, 1),
+                        ('2223000048410010', '4263982640269299', 'IE12BOFI90000112345444', 'IE12BOFI90000112345666', '2024-02-21 12:16:45.866', '2024-02-22 12:16:45.866', 'APPROVED', 'ACCOUNT', 120.0, 2);
