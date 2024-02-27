@@ -154,18 +154,9 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     private TransferEntity createTransferEntity(PaymentOrderEntityDto paymentOrderEntityDto){
-        TransferEntity transferEntity;
-
-        if(paymentOrderEntityDto.getSourceCardNumber() != null){
-            transferEntity = TransferEntity.builder()
-                    .sourceNumber(paymentOrderEntityDto.getSourceCardNumber())
-                    .destinationNumber(paymentOrderEntityDto.getDestinationCardNumber())
-                    .userId(paymentOrderEntityDto.getUserId())
-                    .amount(paymentOrderEntityDto.getAmount())
-                    .build();
-        }
-        else {
-            transferEntity = TransferEntity.builder()
+        if(paymentOrderEntityDto.getSourceAccountNumber() != null &&
+                paymentOrderEntityDto.getDestinationAccountNumber() != null){
+            return TransferEntity.builder()
                     .sourceNumber(paymentOrderEntityDto.getSourceAccountNumber())
                     .destinationNumber(paymentOrderEntityDto.getDestinationAccountNumber())
                     .userId(paymentOrderEntityDto.getUserId())
@@ -173,7 +164,14 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                     .build();
         }
 
-        return transferEntity;
+        else {
+            return TransferEntity.builder()
+                    .sourceNumber(paymentOrderEntityDto.getSourceCardNumber())
+                    .destinationNumber(paymentOrderEntityDto.getDestinationCardNumber())
+                    .userId(paymentOrderEntityDto.getUserId())
+                    .amount(paymentOrderEntityDto.getAmount())
+                    .build();
+        }
     }
 
     private void sendTransfer(TransferEntity transferEntity, PaymentOrderEntityDto paymentOrderEntityDto, String urlStart){
