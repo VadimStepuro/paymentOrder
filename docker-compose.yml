@@ -46,6 +46,7 @@ services:
       JDBC_PASSWORD: 1111
       WEBCLIENT_MAX_SIZE: 16777216
       WEBCLIENT_BASE_URL_CUSTOMER: http://customer-app:8080/api/v1
+      WEBCLIENT_TIMEOUT_MILLIS: 5000
     depends_on:
       db:
         condition: service_healthy

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ServerExceptionHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(ServerException.class)
-    public String handleServerException(ServerException ex){
-        return ex.getMessage();
+    public ServerException handleServerException(ServerException ex){
+        return ex;
     }
 }

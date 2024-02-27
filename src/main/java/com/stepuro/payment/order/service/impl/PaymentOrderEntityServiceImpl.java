@@ -14,11 +14,11 @@ import com.stepuro.payment.order.repository.PaymentOrderEntityRepositoryJpa;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +35,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     private WebClient webClient;
 
     @Autowired
-    private RestTemplate restTemplate;
+    private RestClient restClient;
 
     @Override
     public List<PaymentOrderEntityDto> findALl() {
@@ -174,8 +174,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     private void sendTransfer(TransferEntity transferEntity, PaymentOrderEntityDto paymentOrderEntityDto, String urlStart){
-        webClient
-                .put()
+        webClient.put()
                 .uri("/" + urlStart + "/transfer_amount")
                 .body(Mono.just(transferEntity), TransferEntity.class)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -190,7 +189,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                     .save(PaymentOrderEntityMapper
                                             .INSTANCE
                                             .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-                            return Mono.error(new ClientException(error.bodyToMono(String.class).block()));
+                            return error.bodyToMono(String.class).map(ClientException::new);
                         })
                 .onStatus(HttpStatusCode::is5xxServerError,
                         error -> {
@@ -199,40 +198,40 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                     .save(PaymentOrderEntityMapper
                                             .INSTANCE
                                             .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-                            return Mono.error(new ServerException(error.bodyToMono(String.class).block()));
+                            return error.bodyToMono(String.class).map(ServerException::new);
                         })
                 .bodyToMono(Void.class)
                 .block();
     }
 
     private void sendRestTransfer(TransferEntity transferEntity, PaymentOrderEntityDto paymentOrderEntityDto, String urlStart){
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<TransferEntity> httpEntity = new HttpEntity<>(transferEntity);
-
-        try {
-            ResponseEntity<String> responseEntity = restTemplate.exchange("/" + urlStart + "/transfer_amount", HttpMethod.PUT, httpEntity, String.class);
-        }
-        catch (HttpClientErrorException exception) {
-            paymentOrderEntityDto.setStatus(PaymentOrderEntityStatus.ERROR);
-
-            paymentOrderEntityRepositoryJpa
-                    .save(PaymentOrderEntityMapper
-                            .INSTANCE
-                            .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-
-            throw new ClientException(exception.getMessage());
-        }
-        catch (HttpServerErrorException exception) {
-            paymentOrderEntityDto.setStatus(PaymentOrderEntityStatus.ERROR);
-
-            paymentOrderEntityRepositoryJpa
-                    .save(PaymentOrderEntityMapper
-                            .INSTANCE
-                            .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-
-            throw new ServerException(exception.getMessage());
-        }
+        restClient.put()
+                    .uri("/" + urlStart + "/transfer_amount")
+                    .body(transferEntity)
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                    .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
+                    .acceptCharset(StandardCharsets.UTF_8)
+                    .ifNoneMatch("*")
+                    .retrieve()
+                    .onStatus(HttpStatusCode::is4xxClientError,
+                            (request, response) -> {
+                                paymentOrderEntityDto.setStatus(PaymentOrderEntityStatus.ERROR);
+                                paymentOrderEntityRepositoryJpa
+                                        .save(PaymentOrderEntityMapper
+                                                .INSTANCE
+                                                .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
+                                throw new ClientException(new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8));
+                            })
+                    .onStatus(HttpStatusCode::is5xxServerError,
+                            (request, response) -> {
+                                paymentOrderEntityDto.setStatus(PaymentOrderEntityStatus.ERROR);
+                                paymentOrderEntityRepositoryJpa
+                                        .save(PaymentOrderEntityMapper
+                                                .INSTANCE
+                                                .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
+                                throw new ServerException(new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8));
+                            })
+                    .toBodilessEntity();
     }
 }
 
