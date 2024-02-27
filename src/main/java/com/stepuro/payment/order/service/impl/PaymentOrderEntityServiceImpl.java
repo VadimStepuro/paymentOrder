@@ -154,7 +154,8 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     private TransferEntity createTransferEntity(PaymentOrderEntityDto paymentOrderEntityDto){
-        if(paymentOrderEntityDto.getSourceAccountNumber() != null){
+        if(paymentOrderEntityDto.getSourceAccountNumber() != null &&
+                paymentOrderEntityDto.getDestinationAccountNumber() != null){
             return TransferEntity.builder()
                     .sourceNumber(paymentOrderEntityDto.getSourceAccountNumber())
                     .destinationNumber(paymentOrderEntityDto.getDestinationAccountNumber())
