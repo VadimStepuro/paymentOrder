@@ -88,6 +88,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     @Override
+    @Transactional
     public PaymentOrderEntityDto createRestClientPayment(PaymentOrderEntityDto paymentOrderEntityDto){
         TransferEntity transferEntity = createTransferEntity(paymentOrderEntityDto);
 
