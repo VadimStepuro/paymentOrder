@@ -99,7 +99,7 @@ public class PaymentOrderEntityController {
     @Loggable
     @PostMapping(value = "payment_order_entities/transfer_amount_rest_client", consumes = "application/json", produces = "application/json")
     public ResponseEntity<PaymentOrderEntityDto> transferAmountRestClient(@RequestBody @Valid PaymentOrderEntityDto paymentOrderEntityDto){
-        PaymentOrderEntityDto payment = paymentOrderEntityService.createRestTemplatePayment(paymentOrderEntityDto);
+        PaymentOrderEntityDto payment = paymentOrderEntityService.createRestClientPayment(paymentOrderEntityDto);
 
         return new ResponseEntity<>(payment, HttpStatus.CREATED);
     }

@@ -1,5 +1,8 @@
 package com.stepuro.payment.order.service.impl;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.stepuro.payment.order.api.dto.ApiError;
 import com.stepuro.payment.order.api.dto.PaymentOrderEntityDto;
 import com.stepuro.payment.order.api.dto.TransferEntity;
 import com.stepuro.payment.order.api.exceptions.ClientException;
@@ -85,7 +88,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     @Override
-    public PaymentOrderEntityDto createRestTemplatePayment(PaymentOrderEntityDto paymentOrderEntityDto){
+    public PaymentOrderEntityDto createRestClientPayment(PaymentOrderEntityDto paymentOrderEntityDto){
         TransferEntity transferEntity = createTransferEntity(paymentOrderEntityDto);
 
         switch (paymentOrderEntityDto.getPaymentType()){
@@ -189,7 +192,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                     .save(PaymentOrderEntityMapper
                                             .INSTANCE
                                             .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-                            return error.bodyToMono(String.class).map(ClientException::new);
+                            return error.bodyToMono(ApiError.class).map((ex) -> new ClientException(ex.getMessage()));
                         })
                 .onStatus(HttpStatusCode::is5xxServerError,
                         error -> {
@@ -198,7 +201,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                     .save(PaymentOrderEntityMapper
                                             .INSTANCE
                                             .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-                            return error.bodyToMono(String.class).map(ServerException::new);
+                            return error.bodyToMono(ApiError.class).map((ex) -> new ServerException(ex.getMessage()));
                         })
                 .bodyToMono(Void.class)
                 .block();
@@ -220,7 +223,12 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                         .save(PaymentOrderEntityMapper
                                                 .INSTANCE
                                                 .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-                                throw new ClientException(new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8));
+
+                                JsonMapper mapper = new JsonMapper();
+
+                                ApiError error = mapper.readValue(new String(response.getBody().readAllBytes()), ApiError.class);
+
+                                throw new ClientException(error.getMessage());
                             })
                     .onStatus(HttpStatusCode::is5xxServerError,
                             (request, response) -> {
@@ -229,7 +237,13 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
                                         .save(PaymentOrderEntityMapper
                                                 .INSTANCE
                                                 .paymentOrderEntityDtoToPaymentOrderEntity(paymentOrderEntityDto));
-                                throw new ServerException(new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8));
+
+                                JsonMapper mapper = new JsonMapper();
+                                mapper.registerModule(new JavaTimeModule());
+
+                                ApiError error = mapper.readValue(new String(response.getBody().readAllBytes()), ApiError.class);
+
+                                throw new ServerException(error.getMessage());
                             })
                     .toBodilessEntity();
     }

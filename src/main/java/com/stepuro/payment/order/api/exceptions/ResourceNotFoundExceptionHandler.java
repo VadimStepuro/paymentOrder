@@ -1,5 +1,6 @@
 package com.stepuro.payment.order.api.exceptions;
 
+import com.stepuro.payment.order.api.dto.ApiError;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -8,13 +9,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ResourceNotFoundExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(ResourceNotFoundException.class)
-    public String handleResourceNotFoundException(ResourceNotFoundException ex) {
-        return ex.getMessage();
+    public ApiError handleResourceNotFoundException(ResourceNotFoundException ex) {
+        return new ApiError(HttpStatus.NOT_FOUND, ex.getMessage(), ex);
     }
 
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ExceptionHandler(NoContentException.class)
-    public String handleNoContentException(NoContentException ex) {
-        return ex.getMessage();
+    public ApiError handleNoContentException(NoContentException ex) {
+        return new ApiError(HttpStatus.NO_CONTENT, ex.getMessage(), ex);
     }
 }

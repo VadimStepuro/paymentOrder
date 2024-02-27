@@ -8,7 +8,7 @@ import java.util.UUID;
 public interface PaymentOrderEntityService {
     PaymentOrderEntityDto createPayment(PaymentOrderEntityDto paymentOrderEntityDto);
 
-    PaymentOrderEntityDto createRestTemplatePayment(PaymentOrderEntityDto paymentOrderEntityDto);
+    PaymentOrderEntityDto createRestClientPayment(PaymentOrderEntityDto paymentOrderEntityDto);
 
     List<PaymentOrderEntityDto> findALl();
 
