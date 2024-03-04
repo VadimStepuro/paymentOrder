@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: payment-order-db
+  namespace: payment-order
+spec:
+  serviceName: payment-order-db-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-order-db
+  template:
+    metadata:
+      labels:
+        app: payment-order-db
+    spec:
+      containers:
+        - name: payment-order-db
+          image: postgres:latest
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-db-secret
+                  key: payment-order-db-root-username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-db-secret
+                  key: payment-order-db-root-password
+          livenessProbe:
+            exec:
+              command:
+                - bash
+                - -ec
+                - 'PGPASSWORD=$POSTGRES_PASSWORD psql -w -U "postgres" -d "postgres"  -h 127.0.0.1 -c "SELECT 1"'
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+              exec:
+                command:
+                  - bash
+                  - -ec
+                  - 'PGPASSWORD=$POSTGRES_PASSWORD psql -w -U "postgres" -d "postgres"  -h 127.0.0.1 -c "SELECT 1"'
+              initialDelaySeconds: 5
+              periodSeconds: 10
+              timeoutSeconds: 5
+              successThreshold: 1
+              failureThreshold: 6
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: db-volume
+      volumes:
+        - name: db-volume
+          persistentVolumeClaim:
+            claimName: payment-order-pv-claim
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-order-db-service
+  namespace: payment-order
+spec:
+  selector:
+    app: payment-order-db
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+---
