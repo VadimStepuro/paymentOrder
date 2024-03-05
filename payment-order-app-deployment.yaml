@@ -4,8 +4,8 @@ metadata:
   name: payment-order-app-env
   namespace: payment-order
 data:
-  database-url: payment-order-db-service
-  spring-datasource-url: jdbc:postgresql://payment-order-db-service/postgres
+  database-url: payment-order-pgpool-service
+  spring-datasource-url: jdbc:postgresql://payment-order-pgpool-service/postgres
   jdbc-driver: org.postgresql.Driver
   webclient-max-size: '16777216'
   webclient-base-url-customer: http://customer-app-service.customer:8082/api/v1
@@ -17,7 +17,7 @@ metadata:
   name: payment-order-app
   namespace: payment-order
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: payment-order-app
