@@ -39,8 +39,9 @@ public class PaymentOrderEntityRepositoryJdbc {
                         "updated_date, " +
                         "status, " +
                         "payment_type, " +
-                        "amount) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "amount, " +
+                        "user_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 
                 paymentOrderEntity.getId(),
                 paymentOrderEntity.getSourceCardNumber(),
@@ -51,7 +52,8 @@ public class PaymentOrderEntityRepositoryJdbc {
                 paymentOrderEntity.getUpdatedDate().toString(),
                 paymentOrderEntity.getStatus().toString(),
                 paymentOrderEntity.getPaymentType().toString(),
-                paymentOrderEntity.getAmount());
+                paymentOrderEntity.getAmount(),
+                paymentOrderEntity.getUserId());
 
         return paymentOrderEntity.getId();
     }
@@ -67,7 +69,8 @@ public class PaymentOrderEntityRepositoryJdbc {
                         "updated_date = ?, " +
                         "status = ?, " +
                         "payment_type = ?, " +
-                        "amount = ? " +
+                        "amount = ?, " +
+                        "user_id = ? " +
                         "WHERE payment_order_entity.id = ? ",
                 paymentOrderEntity.getSourceCardNumber(),
                 paymentOrderEntity.getDestinationCardNumber(),
@@ -78,6 +81,7 @@ public class PaymentOrderEntityRepositoryJdbc {
                 paymentOrderEntity.getStatus().toString(),
                 paymentOrderEntity.getPaymentType().toString(),
                 paymentOrderEntity.getAmount(),
+                paymentOrderEntity.getUserId(),
                 paymentOrderEntity.getId());
     }
 
@@ -120,6 +124,7 @@ public class PaymentOrderEntityRepositoryJdbc {
             paymentOrderEntity.setStatus(PaymentOrderEntityStatus.valueOf(rs.getString("status")));
             paymentOrderEntity.setPaymentType(PaymentType.valueOf(rs.getString("payment_type")));
             paymentOrderEntity.setAmount(rs.getBigDecimal("amount"));
+            paymentOrderEntity.setUserId(rs.getInt("user_id"));
 
             return paymentOrderEntity;
         }

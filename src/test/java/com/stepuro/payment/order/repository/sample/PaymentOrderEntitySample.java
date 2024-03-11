@@ -18,6 +18,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.CARD)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static PaymentOrderEntity paymentOrderEntity2 = PaymentOrderEntity.builder()
@@ -28,6 +29,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.ACCOUNT)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static PaymentOrderEntity paymentOrderEntity3 = PaymentOrderEntity.builder()
@@ -38,6 +40,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.ACCOUNT)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static PaymentOrderEntity paymentOrderEntity4 = PaymentOrderEntity.builder()
@@ -48,6 +51,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.CARD)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static List<PaymentOrderEntity> paymentOrderEntityList = List.of(

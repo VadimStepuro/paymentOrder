@@ -10,6 +10,9 @@ data:
   webclient-max-size: '16777216'
   webclient-base-url-customer: http://customer-app-service.customer:8082/api/v1
   webclient-timeout-millis: '5000'
+  spring-kafka-bootstrap-servers: kafka-service.kafka:9092
+  kafka-topic-name-transfer-amount: transferAmount
+  kafka-group-id: paymentOrderGroup
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -17,7 +20,7 @@ metadata:
   name: payment-order-app
   namespace: payment-order
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: payment-order-app
@@ -28,7 +31,7 @@ spec:
     spec:
       containers:
         - name: payment-order-app
-          image: vadimstepuro/payment-order-app
+          image: vadimstepuro/payment-order-app:1.0.11
           ports:
             - containerPort: 8080
           env:
@@ -91,6 +94,21 @@ spec:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: webclient-timeout-millis
+            - name: SPRING_KAFKA_BOOTSTRAP-SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: spring-kafka-bootstrap-servers
+            - name: KAFKA_TOPIC-NAME_TRANSFER-AMOUNT
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: kafka-topic-name-transfer-amount
+            - name: KAFKA_GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: kafka-group-id
 ---
 apiVersion: v1
 kind: Service

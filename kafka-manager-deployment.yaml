@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-manager
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-manager
+  template:
+    metadata:
+      labels:
+        app: kafka-manager
+    spec:
+      containers:
+        - name: kafka-manager
+          image: vishant07/kafka-manager:v1
+          ports:
+            - containerPort: 80
+          env:
+            - name: ZK_HOSTS
+              value: zookeeper-service.kafka:2181
+          command:
+            - ./bin/kafka-manager
+            - -Dhttp.port=80
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: kafka-manager
+  namespace: kafka
+spec:
+  selector:
+    app: kafka-manager
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 80
+      nodePort: 30028
