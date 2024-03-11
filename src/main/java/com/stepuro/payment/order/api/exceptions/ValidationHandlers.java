@@ -21,16 +21,24 @@ public class ValidationHandlers {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiError handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<ApiSubError> errors = new ArrayList<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            Object rejectedValue = ((FieldError) error).getRejectedValue();
-            String fieldName = ((FieldError) error).getField();
+        ex.getBindingResult().getFieldErrors().forEach((error) -> {
+            Object rejectedValue = error.getRejectedValue();
+            String fieldName = error.getField();
             String errorMessage = error.getDefaultMessage();
             String objectName = error.getObjectName();
 
             errors.add(new ApiValidationError(objectName, fieldName, rejectedValue, errorMessage));
         });
 
-        return new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage(), ex, errors);
+        StringBuilder returnMessage = new StringBuilder();
+        ex.getAllErrors().forEach((error) -> {
+            returnMessage.append(error.getDefaultMessage());
+            returnMessage.append(" (");
+            returnMessage.append(error.getObjectName());
+            returnMessage.append(") ");
+        });
+
+        return new ApiError(HttpStatus.BAD_REQUEST, returnMessage.toString(), ex, errors);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

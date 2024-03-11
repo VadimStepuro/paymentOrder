@@ -17,6 +17,7 @@ public class ApiError {
     private Timestamp timestamp;
     private String message;
     private String debugMessage;
+    private String exceptionName;
     private List<ApiSubError> subErrors;
 
     private ApiError() {
@@ -33,6 +34,7 @@ public class ApiError {
         this.status = status;
         this.message = "Unexpected error";
         this.debugMessage = ex.getLocalizedMessage();
+        this.exceptionName = ex.getClass().getName();
     }
 
     public ApiError(HttpStatus status, String message, Throwable ex) {
@@ -40,6 +42,7 @@ public class ApiError {
         this.status = status;
         this.message = message;
         this.debugMessage = ex.getLocalizedMessage();
+        this.exceptionName = ex.getClass().getName();
     }
 
     public ApiError(HttpStatus status, String message, Throwable ex, List<ApiSubError> subErrors) {
@@ -47,6 +50,7 @@ public class ApiError {
         this.status = status;
         this.message = message;
         this.debugMessage = ex.getLocalizedMessage();
+        this.exceptionName = ex.getClass().getName();
         this.subErrors = subErrors;
     }
 }

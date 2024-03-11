@@ -1,0 +1,129 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-order-pgpool-service
+  namespace: payment-order
+spec:
+  type: ClusterIP
+  sessionAffinity: None
+  ports:
+    - name: order-pgpool
+      port: 5432
+      targetPort: 5432
+      protocol: TCP
+      nodePort: null
+  selector:
+    app: payment-order-pgpool
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-order-pgpool-nodeport
+  namespace: payment-order
+spec:
+  type: NodePort
+  sessionAffinity: None
+  ports:
+    - name: order-pgpool
+      port: 5432
+      nodePort: 30010
+      targetPort: order-pgpool
+      protocol: TCP
+  selector:
+    app: payment-order-pgpool
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-order-pgpool-deployment
+  namespace: payment-order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-order-pgpool
+  template:
+    metadata:
+      labels:
+        app: payment-order-pgpool
+    spec:
+      securityContext:
+        fsGroup: 1001
+      containers:
+        - name: payment-order-pgpool
+          image: docker.io/bitnami/pgpool:4.5.1-debian-12-r0
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsUser: 1001
+          env:
+            - name: BITNAMI_DEBUG
+              value: "true"
+            - name: PGPOOL_BACKEND_NODES
+              value: 0:payment-order-replicable-db-0.payment-order-db-headless-service:5432,1:payment-order-replicable-db-1.payment-order-db-headless-service:5432,2:payment-order-replicable-db-2.payment-order-db-headless-service:5432
+            - name: PGPOOL_SR_CHECK_USER
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-db-secret
+                  key: payment-order-db-root-username
+            - name: PGPOOL_SR_CHECK_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-db-secret
+                  key: payment-order-db-root-password
+            - name: PGPOOL_SR_CHECK_DATABASE
+              value: "postgres"
+            - name: PGPOOL_ENABLE_LDAP
+              value: "no"
+            - name: PGPOOL_POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-db-secret
+                  key: payment-order-db-root-username
+            - name: PGPOOL_POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-db-secret
+                  key: payment-order-db-root-password
+            - name: PGPOOL_ADMIN_USERNAME
+              value: "admin"
+            - name: PGPOOL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-pgpool-secret
+                  key: admin-password
+            - name: PGPOOL_ENABLE_LOAD_BALANCING
+              value: "yes"
+            - name: PGPOOL_ENABLE_LOG_CONNECTIONS
+              value: "no"
+            - name: PGPOOL_ENABLE_LOG_HOSTNAME
+              value: "yes"
+            - name: PGPOOL_ENABLE_LOG_PER_NODE_STATEMENT
+              value: "no"
+            - name: PGPOOL_CHILD_LIFE_TIME
+              value: ""
+            - name: PGPOOL_ENABLE_TLS
+              value: "no"
+          ports:
+            - name: order-pgpool
+              containerPort: 5432
+              protocol: TCP
+          livenessProbe:
+            exec:
+              command:
+                - /opt/bitnami/scripts/pgpool/healthcheck.sh
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
+          readinessProbe:
+            exec:
+              command:
+                - bash
+                - -ec
+                - PGPASSWORD=${PGPOOL_POSTGRES_PASSWORD} psql -U ${PGPOOL_POSTGRES_USERNAME} -d "postgres" -h /opt/bitnami/pgpool/tmp -tA -c "SELECT 1" >/dev/null
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 5
