@@ -37,7 +37,7 @@ public class PaymentOrderEntityController {
     @Loggable
     @GetMapping(value = "/payment_order_entities", produces = "application/json")
     public ResponseEntity<List<PaymentOrderEntityDto>> findAll(){
-        List<PaymentOrderEntityDto> allPaymentOrderEntities = paymentOrderEntityService.findALl();
+        List<PaymentOrderEntityDto> allPaymentOrderEntities = paymentOrderEntityService.findAll();
 
         return new ResponseEntity<>(allPaymentOrderEntities, HttpStatus.OK);
     }

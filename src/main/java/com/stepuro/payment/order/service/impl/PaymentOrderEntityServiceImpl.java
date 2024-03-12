@@ -17,6 +17,10 @@ import com.stepuro.payment.order.repository.PaymentOrderEntityRepositoryJpa;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
@@ -41,7 +45,8 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     private RestClient restClient;
 
     @Override
-    public List<PaymentOrderEntityDto> findALl() {
+    @Cacheable(cacheNames = "paymentOrderEntities", keyGenerator = "newKeyGenerator")
+    public List<PaymentOrderEntityDto> findAll() {
         List<PaymentOrderEntityDto> paymentOrderEntityDtos = paymentOrderEntityRepositoryJpa
                 .findAll()
                 .stream()
@@ -56,6 +61,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     @Override
+    @Cacheable(cacheNames = "paymentOrderEntityById", key = "#id")
     public PaymentOrderEntityDto findById(UUID id) {
         return PaymentOrderEntityMapper
                 .INSTANCE
@@ -68,6 +74,14 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
 
     @Override
     @Transactional
+    @Caching(
+            put = {
+                    @CachePut(cacheNames = "paymentOrderEntityById", key = "#paymentOrderEntityDto.id"),
+            },
+            evict = {
+                    @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
+            }
+    )
     public PaymentOrderEntityDto createPayment(PaymentOrderEntityDto paymentOrderEntityDto){
         TransferEntity transferEntity = createTransferEntity(paymentOrderEntityDto);
 
@@ -89,6 +103,14 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
 
     @Override
     @Transactional
+    @Caching(
+            put = {
+                    @CachePut(cacheNames = "paymentOrderEntityById", key = "#paymentOrderEntityDto.id"),
+            },
+            evict = {
+                    @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
+            }
+    )
     public PaymentOrderEntityDto createRestClientPayment(PaymentOrderEntityDto paymentOrderEntityDto){
         TransferEntity transferEntity = createTransferEntity(paymentOrderEntityDto);
 
@@ -110,6 +132,14 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
 
     @Override
     @Transactional
+    @Caching(
+            put = {
+                    @CachePut(cacheNames = "paymentOrderEntityById", key = "#paymentOrderEntityDto.id"),
+            },
+            evict = {
+                    @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
+            }
+    )
     public PaymentOrderEntityDto create(PaymentOrderEntityDto paymentOrderEntityDto) {
         return PaymentOrderEntityMapper
                 .INSTANCE
@@ -123,6 +153,14 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
 
     @Override
     @Transactional
+    @Caching(
+            put = {
+                    @CachePut(cacheNames = "paymentOrderEntityById", key = "#paymentOrderEntityDto.id"),
+            },
+            evict = {
+                    @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
+            }
+    )
     public PaymentOrderEntityDto edit(PaymentOrderEntityDto paymentOrderEntityDto) {
         PaymentOrderEntity paymentOrderEntity = paymentOrderEntityRepositoryJpa
                 .findById(paymentOrderEntityDto.getId())
@@ -150,6 +188,12 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
 
     @Override
     @Transactional
+    @Caching(
+            evict = {
+                    @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true),
+                    @CacheEvict(cacheNames = "paymentOrderEntityById", key = "#id")
+            }
+    )
     public void delete(UUID id) {
         paymentOrderEntityRepositoryJpa.deleteById(id);
     }

@@ -29,7 +29,7 @@ public class PaymentOrderEntityRepositoryJdbcTests {
     @BeforeEach
     public void setup(){
         embeddedDatabase = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
-                .addScript("/01.create-payment-order-entity.sql")
+                .addScript("/sql/01.create-payment-order-entity.sql")
                 .build();
 
         paymentOrderEntityRepositoryJdbc = new PaymentOrderEntityRepositoryJdbc();

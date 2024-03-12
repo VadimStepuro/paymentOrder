@@ -55,7 +55,7 @@ public class PaymentOrderEntityServiceImplTests {
     public void PaymentOrderEntityServiceImpl_FindAll_ReturnsAllModels(){
         when(paymentOrderEntityRepositoryJpa.findAll()).thenReturn(paymentOrderEntityList);
 
-        List<PaymentOrderEntityDto> entityDtos = paymentOrderEntityService.findALl();
+        List<PaymentOrderEntityDto> entityDtos = paymentOrderEntityService.findAll();
 
         assertNotNull(entityDtos);
         assertEquals(4, entityDtos.size());

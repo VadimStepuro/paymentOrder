@@ -20,6 +20,7 @@ metadata:
   name: payment-order-replicable-db
   namespace: payment-order
 spec:
+  podManagementPolicy: Parallel
   serviceName: payment-order-db-headless-service
   replicas: 3
   selector:
