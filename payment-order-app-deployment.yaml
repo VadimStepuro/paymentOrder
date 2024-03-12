@@ -13,6 +13,10 @@ data:
   spring-kafka-bootstrap-servers: kafka-service.kafka:9092
   kafka-topic-name-transfer-amount: transferAmount
   kafka-group-id: paymentOrderGroup
+  redis-host: redis-service.redis
+  redis-port: "6379"
+  redis-database: "0"
+  redis-timeout: "60000"
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -31,7 +35,7 @@ spec:
     spec:
       containers:
         - name: payment-order-app
-          image: vadimstepuro/payment-order-app:1.0.11
+          image: vadimstepuro/payment-order-app:1.0.13
           ports:
             - containerPort: 8080
           env:
@@ -109,6 +113,31 @@ spec:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: kafka-group-id
+            - name: SPRING_DATA_REDIS_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: redis-host
+            - name: SPRING_DATA_REDIS_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: redis-port
+            - name: SPRING_DATA_REDIS_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: redis-database
+            - name: SPRING_DATA_REDIS_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: redis-timeout
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payment-order-app-secret
+                  key: redis-password
 ---
 apiVersion: v1
 kind: Service

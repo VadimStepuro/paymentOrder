@@ -10,7 +10,7 @@ public interface PaymentOrderEntityService {
 
     PaymentOrderEntityDto createRestClientPayment(PaymentOrderEntityDto paymentOrderEntityDto);
 
-    List<PaymentOrderEntityDto> findALl();
+    List<PaymentOrderEntityDto> findAll();
 
     PaymentOrderEntityDto findById(UUID id);
 
