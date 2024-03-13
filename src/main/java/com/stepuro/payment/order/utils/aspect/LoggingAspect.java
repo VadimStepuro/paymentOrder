@@ -33,18 +33,25 @@ public class LoggingAspect {
         String methodName = ((MethodSignature) joinPoint.getSignature()).getMethod().getName();
 
         Map<String, Object> parameters = getParameters(joinPoint);
+
         try {
             logger.info("==> class name: {}, method name: {}, arguments: {} ",
-                     className, methodName, mapper.writeValueAsString(parameters));
-        } catch (JsonProcessingException e) {
+                     className,
+                    methodName,
+                    mapper.writeValueAsString(parameters));
+        }
+        catch (JsonProcessingException e) {
             logger.error("Error while converting", e);
         }
     }
 
     @AfterThrowing(pointcut = "pointcut()", throwing = "e")
     public void logAfterThrowing(JoinPoint joinPoint, Throwable e) {
-        logger.error("Exception in class: {}, in method: {}, with message = {}", joinPoint.getSignature().getDeclaringTypeName(),
-                joinPoint.getSignature().getName(), e.getMessage() != null ? e.getMessage() : "NULL");
+        logger.error("Exception {} in class: {}, in method: {}, with message = {}",
+                e.getClass().getName(),
+                joinPoint.getSignature().getDeclaringTypeName(),
+                joinPoint.getSignature().getName(),
+                e.getMessage() != null ? e.getMessage() : "NULL");
     }
 
     @AfterReturning(pointcut = "pointcut()", returning = "entity")
@@ -54,8 +61,11 @@ public class LoggingAspect {
 
         try {
             logger.info("<== class name: {}, method name: {}, retuning: {}",
-                    className, methodName, mapper.writeValueAsString(entity));
-        } catch (JsonProcessingException e) {
+                    className,
+                    methodName,
+                    mapper.writeValueAsString(entity));
+        }
+        catch (JsonProcessingException e) {
             logger.error("Error while converting", e);
         }
     }

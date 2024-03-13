@@ -49,6 +49,13 @@ spec:
           value: PLAINTEXT://kafka-service.kafka.svc.cluster.local:9092
         - name: KAFKA_LISTENERS
           value: PLAINTEXT://:9092
+        - name: JMX_PORT
+          value: "9098"
+        - name: KAFKA_JMX_OPTS
+          valueFrom:
+            configMapKeyRef:
+              name: kafka-configmap
+              key: kafka-jmx-opts
         image: wurstmeister/kafka
         imagePullPolicy: IfNotPresent
         name: kafka-broker

@@ -33,15 +33,19 @@ public class WebClientConfig {
 
     public static ExchangeFilterFunction errorHandler() {
         return ExchangeFilterFunction.ofResponseProcessor(clientResponse -> {
+
             if (clientResponse.statusCode().is5xxServerError()) {
+
                 return clientResponse.bodyToMono(String.class)
                         .flatMap(errorBody -> Mono.error(new ServerException(errorBody)));
-            } else if (clientResponse.statusCode().is4xxClientError()) {
+            }
+            if (clientResponse.statusCode().is4xxClientError()) {
+
                 return clientResponse.bodyToMono(String.class)
                         .flatMap(errorBody -> Mono.error(new ClientException(errorBody)));
-            } else {
-                return Mono.just(clientResponse);
             }
+
+            return Mono.just(clientResponse);
         });
     }
 

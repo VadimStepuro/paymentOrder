@@ -35,7 +35,7 @@ spec:
     spec:
       containers:
         - name: payment-order-app
-          image: vadimstepuro/payment-order-app:1.0.13
+          image: vadimstepuro/payment-order-app:1.2.0
           ports:
             - containerPort: 8080
           env:

@@ -27,6 +27,7 @@ public class KafkaConfiig {
     @Bean
     public ConsumerFactory<String, PaymentOrderEntityDto> createPaymentConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
+
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
                 bootstrapAddress);
@@ -42,6 +43,7 @@ public class KafkaConfiig {
         props.put(
                 JsonDeserializer.TYPE_MAPPINGS,
                 "payment:com.stepuro.payment.order.api.dto.PaymentOrderEntityDto");
+
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),

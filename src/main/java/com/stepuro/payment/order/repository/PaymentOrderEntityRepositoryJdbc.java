@@ -29,6 +29,7 @@ public class PaymentOrderEntityRepositoryJdbc {
     @Transactional
     public UUID save(PaymentOrderEntity paymentOrderEntity){
         paymentOrderEntity.setId(UUID.randomUUID());
+
         jdbcTemplate.update("INSERT INTO payment_order_entity " +
                         "(id, " +
                         "source_card_number, " +
@@ -114,6 +115,7 @@ public class PaymentOrderEntityRepositoryJdbc {
         @Override
         public PaymentOrderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             PaymentOrderEntity paymentOrderEntity = new PaymentOrderEntity();
+
             paymentOrderEntity.setId(UUID.fromString(rs.getString("id")));
             paymentOrderEntity.setSourceCardNumber(rs.getString("source_card_number"));
             paymentOrderEntity.setDestinationCardNumber(rs.getString("destination_card_number"));

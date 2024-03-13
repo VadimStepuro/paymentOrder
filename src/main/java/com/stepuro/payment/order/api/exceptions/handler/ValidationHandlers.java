@@ -1,10 +1,10 @@
-package com.stepuro.payment.order.api.exceptions;
+package com.stepuro.payment.order.api.exceptions.handler;
 
 import com.stepuro.payment.order.api.dto.ApiError;
 import com.stepuro.payment.order.api.dto.ApiSubError;
 import com.stepuro.payment.order.api.dto.ApiValidationError;
+import com.stepuro.payment.order.api.exceptions.ClientException;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;

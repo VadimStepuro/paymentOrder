@@ -1,6 +1,8 @@
-package com.stepuro.payment.order.api.exceptions;
+package com.stepuro.payment.order.api.exceptions.handler;
 
 import com.stepuro.payment.order.api.dto.ApiError;
+import com.stepuro.payment.order.api.exceptions.NoContentException;
+import com.stepuro.payment.order.api.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
