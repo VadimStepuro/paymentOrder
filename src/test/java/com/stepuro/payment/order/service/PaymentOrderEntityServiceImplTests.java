@@ -53,16 +53,9 @@ public class PaymentOrderEntityServiceImplTests {
 
     @Test
     public void PaymentOrderEntityServiceImpl_FindAll_ReturnsAllModels(){
-        List<PaymentOrderEntity> entities = List.of(
-                paymentOrderEntity1,
-                paymentOrderEntity2,
-                paymentOrderEntity3,
-                paymentOrderEntity4
-        );
+        when(paymentOrderEntityRepositoryJpa.findAll()).thenReturn(paymentOrderEntityList);
 
-        when(paymentOrderEntityRepositoryJpa.findAll()).thenReturn(entities);
-
-        List<PaymentOrderEntityDto> entityDtos = paymentOrderEntityService.findALl();
+        List<PaymentOrderEntityDto> entityDtos = paymentOrderEntityService.findAll();
 
         assertNotNull(entityDtos);
         assertEquals(4, entityDtos.size());

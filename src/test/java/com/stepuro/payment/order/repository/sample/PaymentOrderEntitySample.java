@@ -5,10 +5,9 @@ import com.stepuro.payment.order.model.enums.PaymentOrderEntityStatus;
 import com.stepuro.payment.order.model.enums.PaymentType;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.LocalDate;
+import java.util.List;
 
 public class PaymentOrderEntitySample {
     public static PaymentOrderEntity paymentOrderEntity1 = PaymentOrderEntity.builder()
@@ -19,6 +18,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.CARD)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static PaymentOrderEntity paymentOrderEntity2 = PaymentOrderEntity.builder()
@@ -29,6 +29,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.ACCOUNT)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static PaymentOrderEntity paymentOrderEntity3 = PaymentOrderEntity.builder()
@@ -39,6 +40,7 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.ACCOUNT)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
 
     public static PaymentOrderEntity paymentOrderEntity4 = PaymentOrderEntity.builder()
@@ -49,5 +51,12 @@ public class PaymentOrderEntitySample {
             .updatedDate(Timestamp.from(Instant.now()))
             .paymentType(PaymentType.CARD)
             .amount(new BigDecimal("300.05"))
+            .userId(1)
             .build();
+
+    public static List<PaymentOrderEntity> paymentOrderEntityList = List.of(
+            paymentOrderEntity1,
+            paymentOrderEntity2,
+            paymentOrderEntity3,
+            paymentOrderEntity4);
 }

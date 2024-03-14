@@ -28,6 +28,9 @@ import java.util.UUID;
 public class PaymentOrderEntityDto {
     private UUID id;
 
+    @NotNull
+    private Integer userId;
+
     @CreditCardNumber(message = "Invalid source credit card number")
     private String sourceCardNumber;
 

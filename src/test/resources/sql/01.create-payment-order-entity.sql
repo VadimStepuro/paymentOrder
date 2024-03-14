@@ -1,5 +1,5 @@
 CREATE TABLE public.payment_order_entity (
-	id uuid DEFAULT gen_random_uuid(),
+	id uuid DEFAULT random_uuid(),
 	source_account_number varchar NULL,
 	destination_account_number varchar NULL,
 	source_card_number varchar NULL,
@@ -8,7 +8,7 @@ CREATE TABLE public.payment_order_entity (
 	updated_date timestamp NULL,
 	status varchar NOT NULL,
 	payment_type varchar NOT NULL,
-	amount numeric NOT NULL,
+	amount numeric(20, 2) NOT NULL,
 	user_id INTEGER NOT NULL,
 
 	CONSTRAINT account_pk PRIMARY KEY (id),

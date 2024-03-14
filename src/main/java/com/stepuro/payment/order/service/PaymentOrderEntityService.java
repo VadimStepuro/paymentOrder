@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface PaymentOrderEntityService {
-    List<PaymentOrderEntityDto> findALl();
+    List<PaymentOrderEntityDto> findAll();
 
     PaymentOrderEntityDto findById(UUID id);
 

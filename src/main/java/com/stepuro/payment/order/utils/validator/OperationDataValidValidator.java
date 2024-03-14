@@ -39,15 +39,18 @@ public class OperationDataValidValidator implements ConstraintValidator<Operatio
         Object sourceAccountNumber = new BeanWrapperImpl(o).getPropertyValue(sourceAccountNumberName);
         Object destinationAccountNumber = new BeanWrapperImpl(o).getPropertyValue(destinationAccountNumberName);
 
+        boolean areAccountNumbersPresent = sourceAccountNumber != null &&
+                destinationAccountNumber != null &&
+                !sourceAccountNumber.equals(destinationCardNumber);
+
         if(paymentType.equals(PaymentType.CARD)){
-            return sourceCardNumber != null &&
+            return (sourceCardNumber != null &&
                     destinationCardNumber != null &&
-                    !sourceCardNumber.equals(destinationCardNumber);
+                    !sourceCardNumber.equals(destinationCardNumber)) ||
+                    areAccountNumbersPresent;
         }
         else {
-            return sourceAccountNumber != null &&
-                    destinationAccountNumber != null &&
-                    !sourceAccountNumber.equals(destinationCardNumber);
+            return areAccountNumbersPresent;
         }
     }
 }

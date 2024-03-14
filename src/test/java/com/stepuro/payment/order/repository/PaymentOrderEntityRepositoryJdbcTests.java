@@ -1,11 +1,16 @@
 package com.stepuro.payment.order.repository;
 
+import com.stepuro.payment.order.api.exceptions.ResourceNotFoundException;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
 import com.stepuro.payment.order.model.enums.PaymentOrderEntityStatus;
 import com.stepuro.payment.order.model.enums.PaymentType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -16,13 +21,29 @@ import static com.stepuro.payment.order.repository.sample.PaymentOrderEntitySamp
 import static com.stepuro.payment.order.repository.sample.PaymentOrderEntitySample.paymentOrderEntity2;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
+@JdbcTest
 public class PaymentOrderEntityRepositoryJdbcTests {
-    @Autowired
     private PaymentOrderEntityRepositoryJdbc paymentOrderEntityRepositoryJdbc;
+    private EmbeddedDatabase embeddedDatabase;
+
+    @BeforeEach
+    public void setup(){
+        embeddedDatabase = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
+                .addScript("/sql/01.create-payment-order-entity.sql")
+                .build();
+
+        paymentOrderEntityRepositoryJdbc = new PaymentOrderEntityRepositoryJdbc();
+        paymentOrderEntityRepositoryJdbc.setDataSource(embeddedDatabase);
+    }
+
+    @AfterEach
+    public void tearDown(){
+        embeddedDatabase.shutdown();
+    }
 
     @Test
     public void PaymentOrderEntityRepositoryJdbc_Save_SavesModel(){
+
         UUID id = paymentOrderEntityRepositoryJdbc.save(paymentOrderEntity1);
 
         PaymentOrderEntity savedEntity = paymentOrderEntityRepositoryJdbc.findById(id);
@@ -105,8 +126,6 @@ public class PaymentOrderEntityRepositoryJdbcTests {
 
         paymentOrderEntityRepositoryJdbc.deleteById(id);
 
-        PaymentOrderEntity foundEntity = paymentOrderEntityRepositoryJdbc.findById(id);
-
-        assertNull(foundEntity);
+        assertThrows(ResourceNotFoundException.class, () -> paymentOrderEntityRepositoryJdbc.findById(id));
     }
 }

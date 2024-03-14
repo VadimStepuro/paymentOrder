@@ -1,5 +1,6 @@
 package com.stepuro.payment.order.repository;
 
+import com.stepuro.payment.order.api.exceptions.ResourceNotFoundException;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
 import com.stepuro.payment.order.model.enums.PaymentOrderEntityStatus;
 import com.stepuro.payment.order.model.enums.PaymentType;
@@ -28,6 +29,7 @@ public class PaymentOrderEntityRepositoryJdbc {
     @Transactional
     public UUID save(PaymentOrderEntity paymentOrderEntity){
         paymentOrderEntity.setId(UUID.randomUUID());
+
         jdbcTemplate.update("INSERT INTO payment_order_entity " +
                         "(id, " +
                         "source_card_number, " +
@@ -38,8 +40,9 @@ public class PaymentOrderEntityRepositoryJdbc {
                         "updated_date, " +
                         "status, " +
                         "payment_type, " +
-                        "amount) " +
-                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                        "amount, " +
+                        "user_id) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
 
                 paymentOrderEntity.getId(),
                 paymentOrderEntity.getSourceCardNumber(),
@@ -50,7 +53,8 @@ public class PaymentOrderEntityRepositoryJdbc {
                 paymentOrderEntity.getUpdatedDate().toString(),
                 paymentOrderEntity.getStatus().toString(),
                 paymentOrderEntity.getPaymentType().toString(),
-                paymentOrderEntity.getAmount());
+                paymentOrderEntity.getAmount(),
+                paymentOrderEntity.getUserId());
 
         return paymentOrderEntity.getId();
     }
@@ -66,7 +70,8 @@ public class PaymentOrderEntityRepositoryJdbc {
                         "updated_date = ?, " +
                         "status = ?, " +
                         "payment_type = ?, " +
-                        "amount = ? " +
+                        "amount = ?, " +
+                        "user_id = ? " +
                         "WHERE payment_order_entity.id = ? ",
                 paymentOrderEntity.getSourceCardNumber(),
                 paymentOrderEntity.getDestinationCardNumber(),
@@ -77,6 +82,7 @@ public class PaymentOrderEntityRepositoryJdbc {
                 paymentOrderEntity.getStatus().toString(),
                 paymentOrderEntity.getPaymentType().toString(),
                 paymentOrderEntity.getAmount(),
+                paymentOrderEntity.getUserId(),
                 paymentOrderEntity.getId());
     }
 
@@ -95,7 +101,7 @@ public class PaymentOrderEntityRepositoryJdbc {
                     id);
         }
         catch (EmptyResultDataAccessException exception){
-            return null;
+            throw new ResourceNotFoundException("PaymentOrderEntity with id " + id + " not found");
         }
     }
 
@@ -109,6 +115,7 @@ public class PaymentOrderEntityRepositoryJdbc {
         @Override
         public PaymentOrderEntity mapRow(ResultSet rs, int rowNum) throws SQLException {
             PaymentOrderEntity paymentOrderEntity = new PaymentOrderEntity();
+
             paymentOrderEntity.setId(UUID.fromString(rs.getString("id")));
             paymentOrderEntity.setSourceCardNumber(rs.getString("source_card_number"));
             paymentOrderEntity.setDestinationCardNumber(rs.getString("destination_card_number"));
@@ -119,6 +126,7 @@ public class PaymentOrderEntityRepositoryJdbc {
             paymentOrderEntity.setStatus(PaymentOrderEntityStatus.valueOf(rs.getString("status")));
             paymentOrderEntity.setPaymentType(PaymentType.valueOf(rs.getString("payment_type")));
             paymentOrderEntity.setAmount(rs.getBigDecimal("amount"));
+            paymentOrderEntity.setUserId(rs.getInt("user_id"));
 
             return paymentOrderEntity;
         }

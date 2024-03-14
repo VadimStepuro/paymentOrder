@@ -51,4 +51,7 @@ public class PaymentOrderEntity {
 
     @Column(name = "amount")
     private BigDecimal amount;
+
+    @Column(name = "user_id")
+    private Integer userId;
 }
