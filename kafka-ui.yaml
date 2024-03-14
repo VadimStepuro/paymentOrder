@@ -1,0 +1,84 @@
+# manifests/kafka-ui.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: kafka-ui
+  name: kafka-ui
+  namespace: kafka
+spec:
+  type: NodePort
+  ports:
+    - port: 8080
+      targetPort: 8080
+  selector:
+    app: kafka-ui
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: kafka-ui
+  name: kafka-ui
+  namespace: kafka
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+        - image: provectuslabs/kafka-ui:master
+          name: kafka-ui-container
+          ports:
+            - containerPort: 8080
+          env:
+            - name: KAFKA_CLUSTERS_0_NAME
+              value: bank
+            - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+              value: kafka-service:9092
+            - name: KAFKA_CLUSTERS_0_ZOOKEEPER
+              value: zookeeper:2181
+          resources: {}
+          volumeMounts:
+            - name: kafka-ui-storage
+              mountPath: /etc/kafkaui/dynamic_config.yaml
+      volumes:
+        - name: kafka-ui-storage
+          persistentVolumeClaim:
+            claimName: kafka-manager-pvc
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: kafka-ui-pv
+  labels:
+    type: local
+    app: kafka-manager
+spec:
+  storageClassName: kafka-ui
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/mnt/data/kafka-ui"
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: kafka-ui-pvc
+  namespace: kafka
+  labels:
+    app: kafka-ui
+spec:
+  storageClassName: kafka-ui
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
