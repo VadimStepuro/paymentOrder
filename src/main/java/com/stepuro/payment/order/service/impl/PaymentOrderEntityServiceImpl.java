@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -53,7 +52,7 @@ public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService 
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
     public PaymentOrderEntityDto create(PaymentOrderEntityDto paymentOrderEntityDto) {
 

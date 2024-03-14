@@ -36,7 +36,7 @@ public class TransferEntityServiceImpl implements TransferEntityService {
     private PaymentOrderEntityService paymentOrderEntityService;
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = {ClientException.class, ServerException.class})
     @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
     public PaymentOrderEntityDto createRestClientPayment(PaymentOrderEntityDto paymentOrderEntityDto){
         TransferEntity transferEntity = createTransferEntity(paymentOrderEntityDto);
@@ -53,7 +53,7 @@ public class TransferEntityServiceImpl implements TransferEntityService {
     }
 
     @Override
-    @Transactional
+    @Transactional(noRollbackFor = {ClientException.class, ServerException.class})
     @CacheEvict(cacheNames = "paymentOrderEntities", allEntries = true)
     public PaymentOrderEntityDto createPayment(PaymentOrderEntityDto paymentOrderEntityDto){
         TransferEntity transferEntity = createTransferEntity(paymentOrderEntityDto);
@@ -90,7 +90,6 @@ public class TransferEntityServiceImpl implements TransferEntityService {
         }
     }
 
-    @Transactional
     private void sendTransfer(TransferEntity transferEntity, PaymentOrderEntityDto paymentOrderEntityDto, String urlStart){
         try {
             webClient.put()
@@ -122,7 +121,6 @@ public class TransferEntityServiceImpl implements TransferEntityService {
         }
     }
 
-    @Transactional
     private void sendRestTransfer(TransferEntity transferEntity, PaymentOrderEntityDto paymentOrderEntityDto, String urlStart){
         try {
             restClient.put()
