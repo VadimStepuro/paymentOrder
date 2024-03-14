@@ -27,6 +27,7 @@ public class SpringJdbcConfig extends AbstractJdbcConfiguration {
     @Bean
     public DataSource myDataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
         dataSource.setDriverClassName(driverClassName);
         dataSource.setUrl(url);
         dataSource.setUsername(username);

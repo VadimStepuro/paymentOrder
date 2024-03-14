@@ -74,36 +74,6 @@ public class PaymentOrderEntityController {
         return new ResponseEntity<>(createdPaymentOrderEntity, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Create payment order entity with create payment request")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Created payment order entity",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PaymentOrderEntityDto.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid create payment request",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
-    @Loggable
-    @PostMapping(value = "payment_order_entities/transfer_amount", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<PaymentOrderEntityDto> transferAmount(@RequestBody @Valid PaymentOrderEntityDto paymentOrderEntityDto){
-        PaymentOrderEntityDto payment = paymentOrderEntityService.createPayment(paymentOrderEntityDto);
-
-        return new ResponseEntity<>(payment, HttpStatus.CREATED);
-    }
-
-    @Operation(summary = "Create payment order entity with create payment request")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Created payment order entity",
-                    content = { @Content(mediaType = "application/json",
-                            schema = @Schema(implementation = PaymentOrderEntityDto.class))}),
-            @ApiResponse(responseCode = "400", description = "Invalid create payment request",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
-    @Loggable
-    @PostMapping(value = "payment_order_entities/transfer_amount_rest_client", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<PaymentOrderEntityDto> transferAmountRestClient(@RequestBody @Valid PaymentOrderEntityDto paymentOrderEntityDto){
-        PaymentOrderEntityDto payment = paymentOrderEntityService.createRestClientPayment(paymentOrderEntityDto);
-
-        return new ResponseEntity<>(payment, HttpStatus.CREATED);
-    }
-
     @Operation(summary = "Edit payment order entity")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Edited payment order entity",

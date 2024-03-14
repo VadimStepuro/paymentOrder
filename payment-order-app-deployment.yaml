@@ -13,6 +13,8 @@ data:
   spring-kafka-bootstrap-servers: kafka-service.kafka:9092
   kafka-topic-name-transfer-amount: transferAmount
   kafka-group-id: paymentOrderGroup
+  kafka-back-off-interval: "1000"
+  kafka-back-off-max-attempts: "9"
   redis-host: redis-service.redis
   redis-port: "6379"
   redis-database: "0"
@@ -35,7 +37,7 @@ spec:
     spec:
       containers:
         - name: payment-order-app
-          image: vadimstepuro/payment-order-app:1.0.13
+          image: vadimstepuro/payment-order-app:1.2.8
           ports:
             - containerPort: 8080
           env:
@@ -98,41 +100,61 @@ spec:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: webclient-timeout-millis
+
             - name: SPRING_KAFKA_BOOTSTRAP-SERVERS
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: spring-kafka-bootstrap-servers
+
             - name: KAFKA_TOPIC-NAME_TRANSFER-AMOUNT
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: kafka-topic-name-transfer-amount
+
             - name: KAFKA_GROUP_ID
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: kafka-group-id
+
+            - name: KAFKA_BACK-OFF_INTERVAL
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: kafka-back-off-interval
+
+            - name: KAFKA_BACK-OFF_MAX-ATTEMPTS
+              valueFrom:
+                configMapKeyRef:
+                  name: payment-order-app-env
+                  key: kafka-back-off-max-attempts
+
             - name: SPRING_DATA_REDIS_HOST
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: redis-host
+
             - name: SPRING_DATA_REDIS_PORT
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: redis-port
+
             - name: SPRING_DATA_REDIS_DATABASE
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: redis-database
+
             - name: SPRING_DATA_REDIS_TIMEOUT
               valueFrom:
                 configMapKeyRef:
                   name: payment-order-app-env
                   key: redis-timeout
+
             - name: SPRING_DATA_REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
