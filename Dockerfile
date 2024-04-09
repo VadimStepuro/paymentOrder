@@ -9,7 +9,7 @@ RUN mvn -f /home/app/pom.xml clean package
 #
 # Package stage
 #
-FROM openjdk:21 AS package
+FROM amazoncorretto:21.0.2 AS package
 COPY --from=build /home/app/target/*.jar /usr/local/lib/app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/usr/local/lib/app.jar"]
