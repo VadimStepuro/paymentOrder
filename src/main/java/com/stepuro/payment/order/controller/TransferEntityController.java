@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class TransferEntityController {
-    @Autowired
-    private TransferEntityService transferEntityService;
+    private final TransferEntityService transferEntityService;
+
+    public TransferEntityController(TransferEntityService transferEntityService) {
+        this.transferEntityService = transferEntityService;
+    }
 
     @Operation(summary = "Create payment order entity with create payment request")
     @ApiResponses(value = {

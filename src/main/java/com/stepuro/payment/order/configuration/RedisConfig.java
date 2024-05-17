@@ -21,8 +21,11 @@ import java.io.Serializable;
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @EnableCaching
 public class RedisConfig {
-    @Autowired
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
+
+    public RedisConfig(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
 
     @Bean
     public RedisTemplate<String, Serializable> redisCacheTemplate(LettuceConnectionFactory redisConnectionFactory) {

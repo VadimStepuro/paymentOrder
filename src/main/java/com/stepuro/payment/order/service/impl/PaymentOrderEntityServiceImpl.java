@@ -20,8 +20,11 @@ import java.util.UUID;
 
 @Service
 public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService {
-    @Autowired
-    private PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
+    private final PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
+
+    public PaymentOrderEntityServiceImpl(PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa) {
+        this.paymentOrderEntityRepositoryJpa = paymentOrderEntityRepositoryJpa;
+    }
 
     @Override
     @Cacheable(cacheNames = "paymentOrderEntities", keyGenerator = "newKeyGenerator")

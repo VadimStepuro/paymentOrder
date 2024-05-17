@@ -20,8 +20,12 @@ import java.util.Map;
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-    @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
+
+    public LoggingAspect(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Pointcut("@annotation(com.stepuro.payment.order.api.annotation.Loggable)")
     public void pointcut() {
     }

@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class PaymentOrderEntityServiceImplTests {
+class PaymentOrderEntityServiceImplTests {
     @Mock
     private PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
 
@@ -33,7 +33,7 @@ public class PaymentOrderEntityServiceImplTests {
     private PaymentOrderEntityServiceImpl paymentOrderEntityService;
 
     @Test
-    public void PaymentOrderEntityServiceImpl_Save_SavesModel(){
+    void PaymentOrderEntityServiceImpl_Save_SavesModel(){
 
         when(paymentOrderEntityRepositoryJpa.save(any(PaymentOrderEntity.class))).thenReturn(paymentOrderEntity1);
 
@@ -52,7 +52,7 @@ public class PaymentOrderEntityServiceImplTests {
     }
 
     @Test
-    public void PaymentOrderEntityServiceImpl_FindAll_ReturnsAllModels(){
+    void PaymentOrderEntityServiceImpl_FindAll_ReturnsAllModels(){
         when(paymentOrderEntityRepositoryJpa.findAll()).thenReturn(paymentOrderEntityList);
 
         List<PaymentOrderEntityDto> entityDtos = paymentOrderEntityService.findAll();
@@ -62,7 +62,7 @@ public class PaymentOrderEntityServiceImplTests {
     }
 
     @Test
-    public void PaymentOrderEntityServiceImpl_FindById_ReturnsModel(){
+    void PaymentOrderEntityServiceImpl_FindById_ReturnsModel(){
         when(paymentOrderEntityRepositoryJpa.findById(any(UUID.class))).thenReturn(Optional.of(paymentOrderEntity1));
 
         PaymentOrderEntityDto foundEntity = paymentOrderEntityService.findById(UUID.randomUUID());
@@ -80,7 +80,7 @@ public class PaymentOrderEntityServiceImplTests {
     }
 
     @Test
-    public void PaymentOrderEntityServiceImpl_Edit_ReturnsEditedModel(){
+    void PaymentOrderEntityServiceImpl_Edit_ReturnsEditedModel(){
         when(paymentOrderEntityRepositoryJpa.save(any(PaymentOrderEntity.class))).thenReturn(paymentOrderEntity1);
         when(paymentOrderEntityRepositoryJpa.findById(any(UUID.class))).thenReturn(Optional.of(paymentOrderEntity1));
 
@@ -113,7 +113,7 @@ public class PaymentOrderEntityServiceImplTests {
     }
 
     @Test
-    public void PaymentOrderEntityServiceImpl_Delete_DeletesModel(){
+    void PaymentOrderEntityServiceImpl_Delete_DeletesModel(){
         when(paymentOrderEntityRepositoryJpa.findById(any(UUID.class))).thenReturn(Optional.empty());
         doNothing().when(paymentOrderEntityRepositoryJpa).deleteById(any(UUID.class));
 

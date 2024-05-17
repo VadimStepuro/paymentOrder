@@ -22,8 +22,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentOrderEntityController {
-    @Autowired
-    private PaymentOrderEntityService paymentOrderEntityService;
+    private final PaymentOrderEntityService paymentOrderEntityService;
+
+    public PaymentOrderEntityController(PaymentOrderEntityService paymentOrderEntityService) {
+        this.paymentOrderEntityService = paymentOrderEntityService;
+    }
 
     @Operation(summary = "Get all payment order entities")
     @ApiResponses(value = {
@@ -33,7 +36,6 @@ public class PaymentOrderEntityController {
                                     schema = @Schema(implementation = PaymentOrderEntityDto.class)))}),
             @ApiResponse(responseCode = "204", description = "No payment order entity found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
-
     @Loggable
     @GetMapping(value = "/payment_order_entities", produces = "application/json")
     public ResponseEntity<List<PaymentOrderEntityDto>> findAll(){
