@@ -4,7 +4,6 @@ import com.stepuro.payment.order.api.dto.ApiError;
 import com.stepuro.payment.order.api.dto.TransferEntity;
 import com.stepuro.payment.order.api.exceptions.ClientException;
 import com.stepuro.payment.order.api.exceptions.ServerException;
-import com.stepuro.payment.order.utils.wrapper.JacksonSerializeWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
@@ -37,7 +36,7 @@ public class CustomerWebClient {
                 .uri(url)
                 .body(Mono.just(transferEntity), TransferEntity.class)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML)
+                .accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(StandardCharsets.UTF_8)
                 .ifNoneMatch("*")
                 .retrieve()

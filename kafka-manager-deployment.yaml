@@ -44,9 +44,15 @@ spec:
       labels:
         app: kafka-manager
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: kafka-manager
           image: vishant07/kafka-manager:v1
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
+              ephemeral-storage: "4Gi"
           ports:
             - containerPort: 80
           env:

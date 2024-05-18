@@ -31,6 +31,7 @@ spec:
       labels:
         app: kafka-ui
     spec:
+      automountServiceAccountToken: false
       containers:
         - image: provectuslabs/kafka-ui:master
           name: kafka-ui-container
@@ -43,7 +44,11 @@ spec:
               value: kafka-service:9092
             - name: KAFKA_CLUSTERS_0_ZOOKEEPER
               value: zookeeper:2181
-          resources: {}
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
+              ephemeral-storage: "4Gi"
           volumeMounts:
             - name: kafka-ui-storage
               mountPath: /etc/kafkaui/dynamic_config.yaml

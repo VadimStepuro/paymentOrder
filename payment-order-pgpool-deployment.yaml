@@ -47,6 +47,7 @@ spec:
       labels:
         app: payment-order-pgpool
     spec:
+      automountServiceAccountToken: false
       securityContext:
         fsGroup: 1001
       containers:
@@ -55,6 +56,11 @@ spec:
           imagePullPolicy: "IfNotPresent"
           securityContext:
             runAsUser: 1001
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
+              ephemeral-storage: "4Gi"
           env:
             - name: BITNAMI_DEBUG
               value: "true"

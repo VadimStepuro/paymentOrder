@@ -32,9 +32,15 @@ spec:
       labels:
         app: zookeeper
     spec:
+      automountServiceAccountToken: false
       containers:
         - image: wurstmeister/zookeeper
           imagePullPolicy: IfNotPresent
           name: zookeeper
           ports:
             - containerPort: 2181
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
+              ephemeral-storage: "4Gi"

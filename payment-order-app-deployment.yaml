@@ -35,9 +35,14 @@ spec:
       labels:
         app: payment-order-app
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: payment-order-app
           image: vadimstepuro/payment-order-app:1.2.8
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
           ports:
             - containerPort: 8080
           env:

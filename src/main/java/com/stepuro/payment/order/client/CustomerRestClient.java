@@ -1,14 +1,11 @@
 package com.stepuro.payment.order.client;
 
-import com.stepuro.payment.order.api.dto.ApiError;
 import com.stepuro.payment.order.api.dto.TransferEntity;
 import com.stepuro.payment.order.api.exceptions.ClientException;
 import com.stepuro.payment.order.api.exceptions.ServerException;
-import com.stepuro.payment.order.utils.wrapper.JacksonSerializeWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;

@@ -7,7 +7,6 @@ import com.stepuro.payment.order.api.mapper.PaymentOrderEntityMapper;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
 import com.stepuro.payment.order.repository.PaymentOrderEntityRepositoryJpa;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;

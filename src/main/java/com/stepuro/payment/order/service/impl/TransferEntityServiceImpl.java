@@ -1,7 +1,5 @@
 package com.stepuro.payment.order.service.impl;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.stepuro.payment.order.api.dto.ApiError;
 import com.stepuro.payment.order.api.dto.PaymentOrderEntityDto;
 import com.stepuro.payment.order.api.dto.TransferEntity;
 import com.stepuro.payment.order.api.exceptions.ClientException;
@@ -12,21 +10,9 @@ import com.stepuro.payment.order.model.enums.PaymentOrderEntityStatus;
 import com.stepuro.payment.order.model.enums.PaymentType;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
 import com.stepuro.payment.order.service.TransferEntityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestClient;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Mono;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Objects;
 
 @Service
 public class TransferEntityServiceImpl implements TransferEntityService {

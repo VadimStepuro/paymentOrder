@@ -47,6 +47,17 @@ services:
       WEBCLIENT_MAX_SIZE: 16777216
       WEBCLIENT_BASE_URL_CUSTOMER: http://customer-app:8080/api/v1
       CLIENT_TIMEOUT: 60s
+      SPRING_KAFKA_BOOTSTRAP-SERVERS: "customer-kafka:9092"
+      KAFKA_TOPIC-NAME_TRANSFER-AMOUNT: transferAmount
+      KAFKA_GROUP_ID: paymentOrderGroup
+      KAFKA_BACK-OFF_INTERVAL: "1000"
+      KAFKA_BACK-OFF_MAX-ATTEMPTS: "9"
+      KAFKA_TYPE-MAPPING_PAYMENT: "payment"
+      SPRING_DATA_REDIS_HOST: cache
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_DATA_REDIS_DATABASE: 0
+      SPRING_DATA_REDIS_TIMEOUT: 60000
+      SPRING_DATA_REDIS_PASSWORD: my-password
     depends_on:
       db:
         condition: service_healthy
