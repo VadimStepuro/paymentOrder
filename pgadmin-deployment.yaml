@@ -16,11 +16,17 @@ spec:
       labels:
         app: pgadmin
     spec:
+      automountServiceAccountToken: false
       terminationGracePeriodSeconds: 10
       containers:
         - name: pgadmin
           image: dpage/pgadmin4:8.4
           imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
+              ephemeral-storage: "4Gi"
           env:
             - name: PGADMIN_DEFAULT_EMAIL
               value: user@domain.com

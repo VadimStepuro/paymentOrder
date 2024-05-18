@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +21,11 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1")
 public class PaymentOrderEntityController {
-    @Autowired
-    private PaymentOrderEntityService paymentOrderEntityService;
+    private final PaymentOrderEntityService paymentOrderEntityService;
+
+    public PaymentOrderEntityController(PaymentOrderEntityService paymentOrderEntityService) {
+        this.paymentOrderEntityService = paymentOrderEntityService;
+    }
 
     @Operation(summary = "Get all payment order entities")
     @ApiResponses(value = {
@@ -33,7 +35,6 @@ public class PaymentOrderEntityController {
                                     schema = @Schema(implementation = PaymentOrderEntityDto.class)))}),
             @ApiResponse(responseCode = "204", description = "No payment order entity found",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
-
     @Loggable
     @GetMapping(value = "/payment_order_entities", produces = "application/json")
     public ResponseEntity<List<PaymentOrderEntityDto>> findAll(){
