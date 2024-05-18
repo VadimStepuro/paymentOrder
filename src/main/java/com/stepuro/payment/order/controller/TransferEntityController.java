@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,8 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 public class TransferEntityController {
-    @Autowired
-    private TransferEntityService transferEntityService;
+    private final TransferEntityService transferEntityService;
+
+    public TransferEntityController(TransferEntityService transferEntityService) {
+        this.transferEntityService = transferEntityService;
+    }
 
     @Operation(summary = "Create payment order entity with create payment request")
     @ApiResponses(value = {

@@ -14,11 +14,17 @@ spec:
       labels:
         app: payment-order-db
     spec:
+      automountServiceAccountToken: false
       containers:
         - name: payment-order-db
           image: postgres:latest
           ports:
             - containerPort: 5432
+          resources:
+            limits:
+              cpu: "500m"
+              memory: "500m"
+              ephemeral-storage: "4Gi"
           env:
             - name: POSTGRES_DB
               value: "postgres"

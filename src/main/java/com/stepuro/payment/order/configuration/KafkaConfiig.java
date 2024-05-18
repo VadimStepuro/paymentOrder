@@ -37,6 +37,9 @@ public class KafkaConfiig {
     @Value(value = "${kafka.back-off.max-attempts}")
     private Long backOffMaxAttempts;
 
+    @Value(value = "${kafka.type-mapping.payment}")
+    private String paymentMapString;
+
     @Bean
     public ConsumerFactory<String, PaymentOrderEntityDto> createPaymentConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -55,7 +58,7 @@ public class KafkaConfiig {
                 JsonDeserializer.class);
         props.put(
                 JsonDeserializer.TYPE_MAPPINGS,
-                "payment:com.stepuro.payment.order.api.dto.PaymentOrderEntityDto");
+                paymentMapString + ":" + PaymentOrderEntityDto.class.getName());
 
         return new DefaultKafkaConsumerFactory<>(
                 props,

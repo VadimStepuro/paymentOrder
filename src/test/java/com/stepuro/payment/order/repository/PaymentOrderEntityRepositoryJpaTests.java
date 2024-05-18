@@ -16,12 +16,12 @@ import static com.stepuro.payment.order.repository.sample.PaymentOrderEntitySamp
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class PaymentOrderEntityRepositoryJpaTests {
+class PaymentOrderEntityRepositoryJpaTests {
     @Autowired
     private PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
 
     @Test
-    public void PaymentOrderEntityRepositoryJpa_Save_ReturnsSavedModel(){
+    void PaymentOrderEntityRepositoryJpa_Save_ReturnsSavedModel(){
         PaymentOrderEntity savedEntity = paymentOrderEntityRepositoryJpa.save(paymentOrderEntity1);
 
         assertNotNull(savedEntity);
@@ -38,7 +38,7 @@ public class PaymentOrderEntityRepositoryJpaTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJpa_FindAll_ReturnsModels(){
+    void PaymentOrderEntityRepositoryJpa_FindAll_ReturnsModels(){
         paymentOrderEntityRepositoryJpa.saveAll(paymentOrderEntityList);
 
         List<PaymentOrderEntity> paymentOrderEntities = paymentOrderEntityRepositoryJpa.findAll();
@@ -48,7 +48,7 @@ public class PaymentOrderEntityRepositoryJpaTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJpa_FindById_ReturnsModel(){
+    void PaymentOrderEntityRepositoryJpa_FindById_ReturnsModel(){
         PaymentOrderEntity savedEntity = paymentOrderEntityRepositoryJpa.save(paymentOrderEntity1);
         paymentOrderEntityRepositoryJpa.save(paymentOrderEntity2);
         
@@ -68,7 +68,7 @@ public class PaymentOrderEntityRepositoryJpaTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJpa_Update_ChangesModel(){
+    void PaymentOrderEntityRepositoryJpa_Update_ChangesModel(){
         PaymentOrderEntity savedEntity = paymentOrderEntityRepositoryJpa.save(paymentOrderEntity1);
 
         savedEntity.setSourceAccountNumber("IE12BOFI90000112345555");
@@ -99,7 +99,7 @@ public class PaymentOrderEntityRepositoryJpaTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJpa_Remove_RemovesModel(){
+    void PaymentOrderEntityRepositoryJpa_Remove_RemovesModel(){
         PaymentOrderEntity savedEntity = paymentOrderEntityRepositoryJpa.save(paymentOrderEntity1);
 
         paymentOrderEntityRepositoryJpa.deleteById(savedEntity.getId());

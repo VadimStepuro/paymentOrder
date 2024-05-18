@@ -8,7 +8,6 @@ import org.aspectj.lang.reflect.CodeSignature;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -20,8 +19,12 @@ import java.util.Map;
 public class LoggingAspect {
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
-    @Autowired
-    private ObjectMapper mapper;
+    private final ObjectMapper mapper;
+
+    public LoggingAspect(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Pointcut("@annotation(com.stepuro.payment.order.api.annotation.Loggable)")
     public void pointcut() {
     }

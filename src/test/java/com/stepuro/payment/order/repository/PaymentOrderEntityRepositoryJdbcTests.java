@@ -22,7 +22,7 @@ import static com.stepuro.payment.order.repository.sample.PaymentOrderEntitySamp
 import static org.junit.jupiter.api.Assertions.*;
 
 @JdbcTest
-public class PaymentOrderEntityRepositoryJdbcTests {
+class PaymentOrderEntityRepositoryJdbcTests {
     private PaymentOrderEntityRepositoryJdbc paymentOrderEntityRepositoryJdbc;
     private EmbeddedDatabase embeddedDatabase;
 
@@ -42,7 +42,7 @@ public class PaymentOrderEntityRepositoryJdbcTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJdbc_Save_SavesModel(){
+    void PaymentOrderEntityRepositoryJdbc_Save_SavesModel(){
 
         UUID id = paymentOrderEntityRepositoryJdbc.save(paymentOrderEntity1);
 
@@ -64,7 +64,7 @@ public class PaymentOrderEntityRepositoryJdbcTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJdbc_FindById_ReturnsModel(){
+    void PaymentOrderEntityRepositoryJdbc_FindById_ReturnsModel(){
         UUID id = paymentOrderEntityRepositoryJdbc.save(paymentOrderEntity1);
         paymentOrderEntityRepositoryJdbc.save(paymentOrderEntity2);
 
@@ -86,7 +86,7 @@ public class PaymentOrderEntityRepositoryJdbcTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJdbc_Edit_ChangesModel(){
+    void PaymentOrderEntityRepositoryJdbc_Edit_ChangesModel(){
         UUID id = paymentOrderEntityRepositoryJdbc.save(paymentOrderEntity1);
 
         PaymentOrderEntity savedEntity = paymentOrderEntityRepositoryJdbc.findById(id);
@@ -121,7 +121,7 @@ public class PaymentOrderEntityRepositoryJdbcTests {
     }
 
     @Test
-    public void PaymentOrderEntityRepositoryJdbc_Remove_RemovesModel(){
+    void PaymentOrderEntityRepositoryJdbc_Remove_RemovesModel(){
         UUID id = paymentOrderEntityRepositoryJdbc.save(paymentOrderEntity1);
 
         paymentOrderEntityRepositoryJdbc.deleteById(id);

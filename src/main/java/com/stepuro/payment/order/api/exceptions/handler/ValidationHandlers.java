@@ -21,7 +21,7 @@ public class ValidationHandlers {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiError handleValidationExceptions(MethodArgumentNotValidException ex) {
         List<ApiSubError> errors = new ArrayList<>();
-        ex.getBindingResult().getFieldErrors().forEach((error) -> {
+        ex.getBindingResult().getFieldErrors().forEach( error -> {
             Object rejectedValue = error.getRejectedValue();
             String fieldName = error.getField();
             String errorMessage = error.getDefaultMessage();
@@ -31,7 +31,7 @@ public class ValidationHandlers {
         });
 
         StringBuilder returnMessage = new StringBuilder();
-        ex.getAllErrors().forEach((error) -> {
+        ex.getAllErrors().forEach( error -> {
             returnMessage.append(error.getDefaultMessage());
             returnMessage.append(" (");
             returnMessage.append(error.getObjectName());

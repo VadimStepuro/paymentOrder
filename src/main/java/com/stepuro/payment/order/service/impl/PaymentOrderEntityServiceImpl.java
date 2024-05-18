@@ -7,7 +7,6 @@ import com.stepuro.payment.order.api.mapper.PaymentOrderEntityMapper;
 import com.stepuro.payment.order.model.PaymentOrderEntity;
 import com.stepuro.payment.order.repository.PaymentOrderEntityRepositoryJpa;
 import com.stepuro.payment.order.service.PaymentOrderEntityService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,8 +19,11 @@ import java.util.UUID;
 
 @Service
 public class PaymentOrderEntityServiceImpl implements PaymentOrderEntityService {
-    @Autowired
-    private PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
+    private final PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa;
+
+    public PaymentOrderEntityServiceImpl(PaymentOrderEntityRepositoryJpa paymentOrderEntityRepositoryJpa) {
+        this.paymentOrderEntityRepositoryJpa = paymentOrderEntityRepositoryJpa;
+    }
 
     @Override
     @Cacheable(cacheNames = "paymentOrderEntities", keyGenerator = "newKeyGenerator")
