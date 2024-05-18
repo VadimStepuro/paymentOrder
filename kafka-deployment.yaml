@@ -57,7 +57,7 @@ spec:
             configMapKeyRef:
               name: kafka-configmap
               key: kafka-jmx-opts
-        image: wurstmeister/kafka
+        image: bitnami/kafka
         imagePullPolicy: IfNotPresent
         name: kafka-broker
         resources:
@@ -69,7 +69,7 @@ spec:
         - containerPort: 9092
         volumeMounts:
           - name: data
-            mountPath: /mnt/kafka
+            mountPath: /bitnami/kafka
   volumeClaimTemplates:
     - metadata:
         name: data
